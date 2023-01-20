@@ -9,12 +9,12 @@ from sklearn.model_selection import train_test_split
 
 def get_zillow():
 
-    if os.path.isfile('zillow.csv'):
-        df = pd.read_csv('zillow.csv', index_col=0)
+    if os.path.isfile('zillow_project.csv'):
+        df = pd.read_csv('zillow_project.csv', index_col=0)
 
     else:
-        df = acquire.get_zillow_data()
-        df.to_csv('zillow.csv')
+        df = acquire.sql_zillow_data()
+        df.to_csv('zillow_project.csv')
 
     return df
 
@@ -25,17 +25,22 @@ def get_zillow():
 def prep_zillow(df):
 
     df = df.rename(columns={'bedroomcnt':'bedrooms', 
-                          'bathroomcnt':'bathrooms', 
-                          'calculatedfinishedsquarefeet':'area',
-                          'taxvaluedollarcnt':'tax_value', 
-                          'yearbuilt':'year_built'})
+                          'bathroomcnt':'bathrooms',
+                          'yearbuilt':'year_built',
+                          'regionidzip': 'zip_code',
+                          'calculatedfinishedsquarefeet':'total_sqft',
+                          })
 
     df = df[df.bathrooms <= 8]
     df = df[df.bedrooms <= 8]
-    df = df[df.tax_value < 2_000_000]
-    df = df[df.area < 10000]
+    df.zip_code = df.zip_code.convert_dtypes(int)
+    df.total_sqft = df.total_sqft.convert_dtypes(int)
+    df.bedrooms = df.bedrooms.convert_dtypes(int)
+    df.year_built = df.year_built.convert_dtypes(int)
 
-    df = df.dropna()
+    #df = df[df.sqft < 10000]
+
+    #df = df.dropna()
     df.drop_duplicates(inplace=True)
     
     train_validate, test = train_test_split(df, test_size=.2, random_state=123)

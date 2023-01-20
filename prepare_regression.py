@@ -22,7 +22,7 @@ def scale_zillow(train, validate, test):
     validate_1 = validate.copy()
     test_1 = test.copy()
 
-    scale_cols = ['bedrooms', 'bathrooms', 'area', 'year_built', 'taxamount']
+    scale_cols = ['bedrooms', 'bathrooms', 'sqft', 'year_built', 'taxamount']
     minmax_scaler = p.MinMaxScaler()
     minmax_scaler.fit(train_1[scale_cols])
 
