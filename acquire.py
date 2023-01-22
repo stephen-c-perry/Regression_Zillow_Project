@@ -4,7 +4,7 @@ import env
 
 def sql_zillow_data():
     sql_query = """
-                select prop.parcelid, prop.id, prop.bathroomcnt, prop.bedroomcnt, prop.regionidzip, prop.yearbuilt, prop.calculatedfinishedsquarefeet
+                select prop.parcelid, prop.id, prop.bathroomcnt, prop.bedroomcnt, prop.regionidzip, prop.yearbuilt, prop.calculatedfinishedsquarefeet, prop.fips
                 from predictions_2017 as pred
                 join properties_2017 as prop
                 on pred.parcelid = prop.parcelid
