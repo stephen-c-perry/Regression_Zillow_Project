@@ -5,6 +5,7 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import wrangle as w
 from scipy.stats import pearsonr
 from scipy.stats import spearmanr
 from scipy import stats
@@ -80,7 +81,7 @@ def crosstab_plot(df, x, y, normalize=False, title='Crosstab Plot'):
 
 
 
-#Pearson's R (Continuous 1 vs Continuous 2), tests for correlation
+#Pearson's R (Continuous 1 vs Continuous 2), tests for correlation #linear
 def pearson_r(x, y):
     """
     Calculates the Pearson correlation coefficient (r) between two lists of data using scipy.stats.pearsonr.
@@ -90,7 +91,7 @@ def pearson_r(x, y):
 
 
 
-#Spearman (Continuous vs Continuous 2), tests for correlation
+#Spearman (Continuous vs Continuous 2), tests for correlation #non-linear
 
 
 def spearman_rho(x, y):
@@ -101,6 +102,22 @@ def spearman_rho(x, y):
     return rho
 
 
+
+
+
+# One Sample T Test
+def one_sample_ttest(target_sample, overall_mean, alpha = 0.05):
+    t, p = stats.ttest_1samp(target_sample, overall_mean)
+    
+    if p/2 > alpha:
+        print("We fail to reject null hypotheses")
+    elif t < 0:
+        print("We fail to reject null hypotheses")
+    else:
+        print("We reject null hypotheses")
+
+
+    return t, p/2, alpha
 
 
 # T-Test One Tailed (Continuous 1 vs Discrete)
@@ -209,7 +226,7 @@ Quickly calculate r value, p value, and standard error
 '''
 def linear_regression(x, y):
     slope, intercept, r_value, p_value, std_err = linregress(x, y)
-    return slope, intercept
+    return slope, intercept, r_value, p_value, std_err
 '''
 x = [1, 2, 3, 4, 5]
 y = [2, 4, 6, 8, 10]
@@ -253,3 +270,10 @@ feature_mask = f_selector.get_support()
 f_feature = X_train_scaled.iloc[:,feature_mask].columns.tolist()
 
 '''
+
+train, validate, test = w.wrangle_zillow()
+
+
+def county_scatter():
+    county_scatter = sns.scatterplot(data=train, x=train.year_built, y=train.tax_value, hue= train.county, size= 1)
+    return county_scatter
