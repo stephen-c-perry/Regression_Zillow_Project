@@ -4,7 +4,7 @@ import env
 
 def sql_zillow_data():
     sql_query = """
-                select prop.parcelid, prop.id, prop.bathroomcnt, prop.bedroomcnt, prop.regionidzip, prop.yearbuilt, prop.calculatedfinishedsquarefeet, prop.fips
+                select prop.parcelid as parcel_id, prop.id as property_id, prop.bathroomcnt, prop.bedroomcnt, prop.regionidzip, prop.yearbuilt, prop.calculatedfinishedsquarefeet, prop.fips, prop.taxvaluedollarcnt
                 from predictions_2017 as pred
                 join properties_2017 as prop
                 on pred.parcelid = prop.parcelid
@@ -12,7 +12,8 @@ def sql_zillow_data():
                 propertylandusetypeid = 261 and
                 regionidzip is not null and
                 yearbuilt is not null and
-                calculatedfinishedsquarefeet is not null;
+                calculatedfinishedsquarefeet is not null and
+                prop.taxvaluedollarcnt is not null;
                 """
     df = pd.read_sql(sql_query, env.get_connection('zillow'))
     return df

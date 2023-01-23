@@ -30,15 +30,19 @@ def prep_zillow(df):
                           'regionidzip': 'zip_code',
                           'calculatedfinishedsquarefeet':'total_sqft',
                           'fips': 'county',
+                          'taxvaluedollarcnt': 'tax_value'
                           })
 
     df = df[df.bathrooms <= 8]
+    df = df[df.bathrooms >= 1]
     df = df[df.bedrooms <= 8]
+    df = df[df.bedrooms >= 2]
+    df = df[df.zip_code < 399675]
     df.zip_code = df.zip_code.convert_dtypes(int)
     df.total_sqft = df.total_sqft.convert_dtypes(int)
     df.bedrooms = df.bedrooms.convert_dtypes(int)
     df.year_built = df.year_built.convert_dtypes(int)
-    df.county = df.county.replace(6059.0,'Orange_County').replace(6037.0,'Los_Angeles_County').replace(6111.0,'Ventura_County')
+    df.county = df.county.replace(6059.0,'Orange').replace(6037.0,'Los_Angeles').replace(6111.0,'Ventura')
     
 
     #df = df[df.sqft < 10000]
