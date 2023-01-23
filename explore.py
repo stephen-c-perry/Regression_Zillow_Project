@@ -12,6 +12,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 from scipy.stats import linregress
 from sklearn.metrics import explained_variance_score
+from sklearn.feature_selection import SelectKBest, f_regression
 
 
 
@@ -41,29 +42,29 @@ def mean_bar_plot(df, x, y, title='Bar Plot with Mean Line'):
 
 
 #Scatter Plot
-def scatter_plot(df, x, y, color, title):
-    sns.scatterplot(data = df, x=x, y=y, color=color)
+def scatter_plot(df, x, y, title):
+    sns.scatterplot(data = df, x=x, y=y)
     plt.title(title)
     plt.show()
 
 
 #Line Plot
-def line_plot(df, x, y, color, title):
-    sns.lineplot(data = df , x=x, y=y, color=color)
+def line_plot(df, x, y, title):
+    sns.lineplot(data = df , x=x, y=y)
     plt.title(title)
     plt.show()
 
 
 #Bar Chart with color
 def bar_chart_with_color(df, x, y, color, title):
-    sns.barplot(data = df , x=x, y=y, color=color)
+    sns.barplot(data = df , x=x, y=y, color= color)
     plt.title(title)
     plt.show()
 
 
 #Histogram
-def hist_plot(df, x, y, color, title):
-    sns.histplot(data = df, x=x, y=y,  color=color)
+def hist_plot(df, x, y, title):
+    sns.histplot(data = df, x=x, y=y)
     plt.title(title)
     plt.show()
 
@@ -209,12 +210,12 @@ Quickly calculate r value, p value, and standard error
 def linear_regression(x, y):
     slope, intercept, r_value, p_value, std_err = linregress(x, y)
     return slope, intercept
-
+'''
 x = [1, 2, 3, 4, 5]
 y = [2, 4, 6, 8, 10]
 slope, intercept = linear_regression(x, y)
 print("Slope:", slope)
-print("Intercept:", intercept)
+print("Intercept:", intercept)'''
 
 
 
@@ -230,5 +231,25 @@ def explained_variance(y_true, y_pred):
 
 df['yhat_baseline'] = df['y'].mean()
 df.head(3)
+
+'''
+
+
+
+'''
+
+Select K Best
+
+# parameters: f_regression stats test, give me 8 features
+f_selector = SelectKBest(f_regression, k=8)
+
+# find the top 8 X's correlated with y
+f_selector.fit(X_train_scaled, y_train)
+
+# boolean mask of whether the column was selected or not. 
+feature_mask = f_selector.get_support()
+
+# get list of top K features. 
+f_feature = X_train_scaled.iloc[:,feature_mask].columns.tolist()
 
 '''
