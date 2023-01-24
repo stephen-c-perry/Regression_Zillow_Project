@@ -2,13 +2,20 @@
 
 Project goals
 
-To find drivers or home value and build a model to predict home values
+To find drivers of home value and build a model to predict home values
 
 Project description
 
-This is a regression project
+This is a regression project on the 2017 Zillow dataset.  Data was acquired from the Codeup SQL server and imported into my python environment.
 
 Project planning (lay out your process through the data science pipeline)
+
+Acquire
+Prepare
+Explore
+Model
+Recommendations/Next Steps
+
 
 Initial hypotheses and/or questions you have of the data, ideas
 

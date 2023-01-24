@@ -14,8 +14,9 @@ from sklearn.metrics import r2_score
 from scipy.stats import linregress
 from sklearn.metrics import explained_variance_score
 from sklearn.feature_selection import SelectKBest, f_regression
+from sklearn.linear_model import TweedieRegressor
 
-
+import prepare_regression as pr
 
 #Bar Chart
 def bar_chart(df, x_col, y_col, title):
@@ -109,14 +110,6 @@ def spearman_rho(x, y):
 def one_sample_ttest(target_sample, overall_mean, alpha = 0.05):
     t, p = stats.ttest_1samp(target_sample, overall_mean)
     
-    if p/2 > alpha:
-        print("We fail to reject null hypotheses")
-    elif t < 0:
-        print("We fail to reject null hypotheses")
-    else:
-        print("We reject null hypotheses")
-
-
     return t, p/2, alpha
 
 
@@ -207,8 +200,6 @@ def ess(y_true, y_pred):
     return ess
 
 
-
-
 # Total Sum of Squares TSS
 def total_sum_of_squares(arr):
     return np.sum(np.square(arr))
@@ -277,3 +268,121 @@ train, validate, test = w.wrangle_zillow()
 def county_scatter():
     county_scatter = sns.scatterplot(data=train, x=train.year_built, y=train.tax_value, hue= train.county, size= 1)
     return county_scatter
+
+
+def county_dummies(train_1):
+    train_1, validate_1, test_1 = w.wrangle_zillow()
+    train_1_encoded = pd.get_dummies(train_1['county'], drop_first=False)  
+    train_1_encoded = train_1.merge(train_1_encoded, left_index=True, right_index=True)
+    train_1_encoded = train_1_encoded.drop(columns= 'county')
+
+    return train_1_encoded
+
+
+def county_stripplot():
+    county_strip = sns.stripplot(x= train.county , y= train.tax_value, size= 5, linewidth=.3)
+    return county_strip
+
+
+
+def sqft_by_value(df_2):
+    sqft_by_value = sns.scatterplot(data = train, x=train.total_sqft, y= train.tax_value, title = 'Higher square footage leads to higher tax value')
+    return sqft_by_value
+
+
+def scatter_plot_sqft_():
+    sns.scatterplot(data = train, x=train.total_sqft, y=train.tax_value)
+    plt.title('As square footage increase, so does the value')
+    plt.show()
+
+
+def bedrooms_stripplot():
+    bedrooms_stripplot = sns.stripplot(x= train.bedrooms, y= train.tax_value, hue= train.county)
+    return bedrooms_stripplot
+    
+
+def bathrooms_stripplot():
+    bathrooms_stripplot = sns.stripplot(x= train.bathrooms, y= train.tax_value, hue= train.county)
+    return bathrooms_stripplot
+
+
+def model_prep(df1, df2, df3):
+    df1, df2, df3 = county_dummies_all(df1, df2, df3)
+    df1 = df1.drop(columns= ['parcel_id', 'property_id', 'zip_code'])
+    df2 = df2.drop(columns= ['parcel_id', 'property_id', 'zip_code'])
+    df3 = df3.drop(columns= ['parcel_id', 'property_id', 'zip_code'])
+    return df1, df2, df3
+
+def X_train_y_train_split(df):
+    X_train = df.drop(columns = 'tax_value')
+    y_train = df.drop(columns = ['bathrooms' , 'bedrooms' , 'year_built' , 'total_sqft' , 'Los_Angeles' , 'Orange' , 'Ventura'])
+    return X_train, y_train
+
+
+#different function for getting dummies that takes in 3 arguments
+
+def county_dummies_all(train_1, validate_1, test_1):
+    train_1, validate_1, test_1 = w.wrangle_zillow()
+    train_1_encoded = pd.get_dummies(train_1['county'], drop_first=False)  
+    train_1_encoded = train_1.merge(train_1_encoded, left_index=True, right_index=True)
+    train_1_encoded = train_1_encoded.drop(columns= 'county')
+
+    validate_1_encoded = pd.get_dummies(validate_1['county'], drop_first=False)  
+    validate_1_encoded = validate_1.merge(validate_1_encoded, left_index=True, right_index=True)
+    validate_1_encoded = validate_1_encoded.drop(columns= 'county')
+
+    test_1_encoded = pd.get_dummies(test_1['county'], drop_first=False)  
+    test_1_encoded = test_1.merge(test_1_encoded, left_index=True, right_index=True)
+    test_1_encoded = test_1_encoded.drop(columns= 'county')
+
+    return train_1_encoded, validate_1_encoded, test_1_encoded
+
+
+
+
+#getting county dummies and dropping columns
+train_model, validate_model, test_model = model_prep(train, validate, test)
+
+#separating target variable
+X_train, y_train = X_train_y_train_split(train_model)
+X_validate, y_validate = X_train_y_train_split(validate_model)
+X_test, y_test = X_train_y_train_split(test_model)
+
+#scaling
+X_train, X_validate, X_test = pr.scale_dataframes(X_train, X_validate, X_test)
+
+
+
+y_train['value_pred_mean'] = 527866.30
+y_validate['value_pred_mean'] = 527866.30
+
+y_train['value_pred_median'] = 376866.00
+y_validate['value_pred_median'] = 376866.00
+
+
+
+def GLM(power, alpha):
+    # create the model object
+    glm = TweedieRegressor(power=power, alpha=alpha)
+
+    # fit the model to our training data. We must specify the column in y_train, 
+    # since we have converted it to a dataframe from a series! 
+    glm.fit(X_train, y_train.tax_value)
+
+    # predict train
+    y_train['value_pred_lm'] = glm.predict(X_train)
+
+    # evaluate: rmse
+    rmse_train = rmse(y_train.tax_value, y_train.value_pred_mean)
+
+    # predict validate
+    y_validate['value_pred_lm'] = glm.predict(X_validate)
+
+    # evaluate: rmse
+    rmse_validate = rmse(y_validate.tax_value, y_validate.value_pred_median)
+
+    return print("RMSE for GLM using TweedieRegressor\nTraining/In-Sample: ", round(rmse_train), 
+      "\nValidation/Out-of-Sample: ", round(rmse_validate))
+
+
+    

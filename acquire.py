@@ -6,7 +6,7 @@ def sql_zillow_data():
     sql_query = """
                 select prop.parcelid as parcel_id, prop.id as property_id, prop.bathroomcnt, prop.bedroomcnt, prop.regionidzip, prop.yearbuilt, prop.calculatedfinishedsquarefeet, prop.fips, prop.taxvaluedollarcnt
                 from predictions_2017 as pred
-                join properties_2017 as prop
+                join properties_2017 as prop 
                 on pred.parcelid = prop.parcelid
                 where transactiondate is not null and
                 propertylandusetypeid = 261 and
