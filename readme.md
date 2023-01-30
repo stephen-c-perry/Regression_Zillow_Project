@@ -48,13 +48,15 @@ Some initial questions I asked were:
 
 Data dictionary
 
-| bedrooms | number of bedrooms
-| bathrooms | number of bathrooms
-| year_built | Construction date
-| zip_code | location descriptor of property
-| total_sqft | measure of total living area
-| county | Orange, Ventura, or Los Angeles
-| tax_value | total tax value in 2017
+Feature | Description
+------------- | -------------
+bedrooms | number of bedrooms
+bathrooms | number of bathrooms
+year_built | Construction date
+zip_code | location descriptor of property
+total_sqft | measure of total living area
+county | Orange, Ventura, or Los Angeles
+tax_value | total tax value in 2017
 
 
 
