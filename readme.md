@@ -1,14 +1,14 @@
-#### Project goals:
+# Project goals:
 
 To determine features that contribute to higher home values in the Californian counties of  Orange, Ventura, and Los Angeles.
 
 
-#### Project description:
+# Project description:
 
 This is a regression project on the 2017 Zillow dataset.  Data was acquired from the Codeup SQL server and imported into my python environment.
 
 
-#### Project planning:
+# Project planning:
 
 - Acquire
 I acquired the data from Codeup's SQL server then saved it locally in a csv file.  
@@ -46,7 +46,7 @@ I recommend gathering data for additional features such as:
 - Does number of bathrooms relate to tax_value?
 - Does year_built relate to value?
 
-#### Data dictionary
+# Data dictionary
 
 Feature | Description
 ------------- | -------------
@@ -64,12 +64,12 @@ To recreate this project in your IDE, download the zillow database from kaggle,
 clones this repository and execute the files.  
 
 
-#### Key Findings:
+# Key Findings:
 
 I found that total square footage, number of bedrooms, and number of bathrooms greatly contributed to higher tax values.  County had
 a weak positive correlation but that may be due to the fact that these three counties are next to eachother.  If the dataset covered the entire state of
 California then county would have much more significance in the model.
 
-#### Takeaways:
+# Takeaways:
 
 This model improves upon the baseline for home value predicitions and is recommended for use on future unseen data.  Continued model fitting and feature engineering would improve the performance.
