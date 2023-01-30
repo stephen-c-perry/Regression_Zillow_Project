@@ -218,12 +218,7 @@ Quickly calculate r value, p value, and standard error
 def linear_regression(x, y):
     slope, intercept, r_value, p_value, std_err = linregress(x, y)
     return slope, intercept, r_value, p_value, std_err
-'''
-x = [1, 2, 3, 4, 5]
-y = [2, 4, 6, 8, 10]
-slope, intercept = linear_regression(x, y)
-print("Slope:", slope)
-print("Intercept:", intercept)'''
+
 
 
 
@@ -234,33 +229,6 @@ def explained_variance(y_true, y_pred):
     return evs
 
 
-
-'''
-
-df['yhat_baseline'] = df['y'].mean()
-df.head(3)
-
-'''
-
-
-
-'''
-
-Select K Best
-
-# parameters: f_regression stats test, give me 8 features
-f_selector = SelectKBest(f_regression, k=8)
-
-# find the top 8 X's correlated with y
-f_selector.fit(X_train_scaled, y_train)
-
-# boolean mask of whether the column was selected or not. 
-feature_mask = f_selector.get_support()
-
-# get list of top K features. 
-f_feature = X_train_scaled.iloc[:,feature_mask].columns.tolist()
-
-'''
 
 train, validate, test = w.wrangle_zillow()
 

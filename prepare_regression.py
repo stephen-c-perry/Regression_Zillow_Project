@@ -46,29 +46,3 @@ def scale_dataframes(df1, df2, df3):
     df2_scaled = scaler.transform(df2)
     df3_scaled = scaler.transform(df3)
     return pd.DataFrame(df1_scaled), pd.DataFrame(df2_scaled), pd.DataFrame(df3_scaled)
-
-'''
-def GLM(power, alpha):
-    # create the model object
-    glm = TweedieRegressor(power=power, alpha=alpha)
-
-    # fit the model to our training data. We must specify the column in y_train, 
-    # since we have converted it to a dataframe from a series! 
-    glm.fit(X_train, y_train.tax_value)
-
-    # predict train
-    y_train['value_pred_lm'] = glm.predict(X_train)
-
-    # evaluate: rmse
-    rmse_train = e.rmse(y_train.tax_value, y_train.y_pred_mean)
-
-    # predict validate
-    y_validate['value_pred_lm'] = glm.predict(X_validate)
-
-    # evaluate: rmse
-    rmse_validate = e.rmse(y_validate.tax_value, y_validate.y_pred_median)
-
-    return print("RMSE for GLM using LinearRegression\nTraining/In-Sample: ", rmse_train, 
-      "\nValidation/Out-of-Sample: ", rmse_validate)
-
-'''
